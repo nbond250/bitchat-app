@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BitChat Secure Messenger</title>
+
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl@1.0.3/nacl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl-util@0.15.1/nacl-util.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script defer src="script.js"></script>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0f172a;
+    color: #cbd5e1;
+    margin: 0;
+    padding: 40px 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 480px;
+    width: 100%;
+    padding: 20px 30px 40px;
+    background-color: #111c38;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+
+  h1 {
+    color: #60a5fa;
+    font-weight: 700;
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 1.7rem;
+    letter-spacing: 0.03em;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #93c5fd;
+  }
+
+  textarea, input {
+    display: block;
+    margin: 5px auto 15px;
+    width: 100%;
+    max-width: 440px;
+    padding: 9px 12px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    color: #e0e7ff;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    resize: vertical;
+  }
+
+  textarea[readonly] {
+    background-color: #475569;
+    cursor: default;
+  }
+
+  textarea:focus, input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background-color: #273549;
+    box-shadow: 0 0 8px #3b82f6aa;
+  }
+
+  button {
+    display: block;
+    margin: 10px auto 0;
+    padding: 12px 18px;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 440px;
+    width: 100%;
+  }
+
+  button:hover {
+    background-color: #1d4ed8;
+  }
+
+  button:active {
+    background-color: #1e40af;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #334155;
+    margin: 30px 0;
+  }
+
+  ul#inbox {
+    list-style: none;
+    padding-left: 0;
+    max-height: 230px;
+    overflow-y: auto;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background-color: #1e293b;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  ul#inbox li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #475569;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    word-wrap: break-word;
+  }
+
+  ul#inbox li:last-child {
+    border-bottom: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>BitChat Secure Messenger</h1>
+
+    <div>
+      <button id="connectWalletBtn">Connect Wallet</button><br />
+      <label>Your Wallet Address:</label><br />
+      <textarea id="walletAddress" readonly rows="1"></textarea>
+    </div>
+
+    <div>
+      <label>Your Encryption Public Key:</label><br />
+      <textarea id="myPublicKey" readonly rows="2"></textarea>
+    </div>
+
+    <div>
+      <label>Recipient Encryption Public Key:</label><br />
+      <input type="text" id="recipientKey" placeholder="Base64 public key" />
+    </div>
+
+    <div>
+      <label>Message:</label><br />
+      <input type="text" id="message" placeholder="Enter message here" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <hr />
+
+    <div>
+      <h3>Inbox:</h3>
+      <button onclick="loadMessages()">Load Messages</button>
+      <ul id="inbox"></ul>
+    </div>
+  </div>
+</body>
+</html>
