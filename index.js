@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 const messages = [];
@@ -8,21 +9,27 @@ const messages = [];
 app.use(cors());
 app.use(bodyParser.json());
 
+// Serve frontend files from the public folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// API to receive a message
 app.post("/send", (req, res) => {
-  // Basic validation can be added here
   messages.push(req.body);
   res.status(200).send({ status: "Message received" });
 });
 
+// API to retrieve messages
 app.get("/messages", (req, res) => {
   res.send(messages);
 });
 
+// Serve index.html when the user visits the root path
 app.get("/", (req, res) => {
-  res.send("✅ BitChat Relay Server is Running");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-const PORT = 3000;
+// Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Relay server running on port ${PORT}`);
+  console.log(`✅ BitChat Relay Server is Running on port ${PORT}`);
 });
